@@ -1,0 +1,26 @@
+const express = require('express');
+const cors = require('cors');
+const axios = require('axios');
+
+const app = express();
+
+// Enable CORS for all routes
+app.use(cors());
+
+// Proxy endpoint
+app.get('/proxy', async (req, res) => {
+  try {
+    const apiUrl = req.query.url; // Get the API URL from the query parameter
+    const response = await axios.get(apiUrl); // Make a request to the API
+    res.json(response.data); // Send the API response back to the client
+  } catch (error) {
+    console.error('Proxy error:', error);
+    res.status(500).json({ error: 'Failed to fetch data from the API' });
+  }
+});
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Proxy server running on http://localhost:${PORT}`);
+});
